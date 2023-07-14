@@ -1,0 +1,55 @@
+.map-snake {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  transition: 0.25s;
+  background-color: rgba(0, 0, 0, 0.75);
+  border-radius: 4px;
+}
+
+.snake-eye {
+  width: 7px;
+  height: 7px;
+  background-color: #9bba5a;
+  position: absolute;
+}
+
+.left.N {
+  top: 3px;
+  left: 4px;
+}
+
+.right.N {
+  top: 3px;
+  left: 14px;
+}
+
+.left.E {
+  top: 14px;
+  left: 18px;
+}
+
+.right.E {
+  top: 4px;
+  left: 18px;
+}
+
+.left.S {
+  top: 18px;
+  left: 4px;
+}
+
+.right.S {
+  top: 18px;
+  left: 14px;
+}
+
+.left.W {
+  top: 14px;
+  left: 3px;
+}
+
+.right.W {
+  top: 4px;
+  left: 3px;
+}
