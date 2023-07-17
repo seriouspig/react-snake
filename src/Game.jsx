@@ -9,6 +9,7 @@ import Food from "./Food";
 var snakeDir;
 
 const Game = () => {
+  const [gameState, setGameState] = useState("end");
   const [snakeDirection, setSnakeDirection] = useState("E");
   const [headPosition, setHeadPosition] = useState([5, 5]);
   const [previousHeadPosition, setPreviousHeadPosition] = useState([
@@ -24,6 +25,20 @@ const Game = () => {
     [4, 5],
   ]);
 
+  const reset = () => {
+    console.log("OUUUUUUCCCCHHHHH !!!");
+    setGameState("end");
+    setHeadPosition([5, 5]);
+    setSnakeLength(4);
+    setSnakeDirection("E");
+    setBodyChain([
+      [1, 5],
+      [2, 5],
+      [3, 5],
+      [4, 5],
+    ]);
+  };
+
   const increaseSnakeLength = () => {
     console.log("INCREASING SNAKE LENGTH");
 
@@ -38,47 +53,61 @@ const Game = () => {
     setPreviousHeadPosition([headX, headY]);
   }, [headPosition]);
 
+  // -------------------- GAME OVER ----------------------
+
+  useEffect(() => {
+    if (headPosition[1] < 0 || headPosition[0] < 0 || headPosition[1] > grid.length - 1 || headPosition[0] > grid[0].length - 1) {
+      reset()
+      
+    }
+  }, [headPosition]);
+
+  // -------------------- END OF GAME OVER ----------------------
+
   // -------------------- HEAD MOVEMENT --------------------
 
   useEffect(() => {
     const interval = setInterval(() => {
-      // console.log("CALLING SET INTERVAL !!!!!!!!!!")
-      var headY = headPosition[1];
-      var headX = headPosition[0];
-      setPreviousHeadPosition([headX, headY]);
-      console.log(snakeDir);
-      switch (snakeDir) {
-        case "N":
-          setHeadPosition([headX, headY - 1]);
-          break;
-        case "E":
-          setHeadPosition([headX + 1, headY]);
-          break;
-        case "S":
-          setHeadPosition([headX, headY + 1]);
-          break;
-        case "W":
-          setHeadPosition([headX - 1, headY]);
-          break;
-        default:
-          break;
+      if (gameState === "play") {
+        // console.log("CALLING SET INTERVAL !!!!!!!!!!")
+        var headY = headPosition[1];
+        var headX = headPosition[0];
+        setPreviousHeadPosition([headX, headY]);
+        console.log(snakeDir);
+
+        switch (snakeDir) {
+          case "N":
+            setHeadPosition([headX, headY - 1]);
+            break;
+          case "E":
+            setHeadPosition([headX + 1, headY]);
+            break;
+          case "S":
+            setHeadPosition([headX, headY + 1]);
+            break;
+          case "W":
+            setHeadPosition([headX - 1, headY]);
+            break;
+          default:
+            break;
+        }
+
+        var oldBodyChain = bodyChain;
+
+        if (oldBodyChain.length === snakeLength) {
+          oldBodyChain.shift();
+        }
+
+        oldBodyChain.push(headPosition);
+
+        setBodyChain(oldBodyChain);
       }
-
-      var oldBodyChain = bodyChain;
-
-      if (oldBodyChain.length === snakeLength) {
-        oldBodyChain.shift();
-      }
-
-      oldBodyChain.push(headPosition);
-
-      setBodyChain(oldBodyChain);
-    }, 500);
+    }, 300);
 
     return () => {
       clearInterval(interval);
     };
-  }, [headPosition]);
+  }, [headPosition, gameState]);
 
   useEffect(() => {
     snakeDir = snakeDirection;
@@ -129,26 +158,41 @@ const Game = () => {
 
   return (
     <div className="map-container">
-      <Food
-        headPosition={headPosition}
-        increaseSnakeLength={increaseSnakeLength}
-      />
-      <Snake
-        headPosition={headPosition}
-        snakeDirection={snakeDirection}
-        snakeLength={snakeLength}
-        previousHeadPosition={previousHeadPosition}
-        bodyChain={bodyChain}
-      />
-      {grid.map((row, index) => {
-        return (
-          <div className="map-row" key={index}>
-            {row.map((cell, index) => {
-              return <div className={`map-cell`} key={index}></div>;
-            })}
-          </div>
-        );
-      })}
+      {gameState === "end" && (
+        <div>
+          GAME OVER
+          <button onClick={() => setGameState("play")}>Try Again</button>
+        </div>
+      )}
+      {gameState === "start" && (
+        <div>
+          <button onClick={() => setGameState("play")}>Start the game</button>
+        </div>
+      )}
+      {gameState === "play" && (
+        <>
+          <Food
+            headPosition={headPosition}
+            increaseSnakeLength={increaseSnakeLength}
+          />
+          <Snake
+            headPosition={headPosition}
+            snakeDirection={snakeDirection}
+            snakeLength={snakeLength}
+            previousHeadPosition={previousHeadPosition}
+            bodyChain={bodyChain}
+          />
+          {grid.map((row, index) => {
+            return (
+              <div className="map-row" key={index}>
+                {row.map((cell, index) => {
+                  return <div className={`map-cell`} key={index}></div>;
+                })}
+              </div>
+            );
+          })}
+        </>
+      )}
     </div>
   );
 };

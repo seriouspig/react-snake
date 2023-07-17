@@ -31,7 +31,7 @@ const SnakeBody = ({
         left: `${Xpos * 28}px`,
       }}
     >
-      {chainIndex}
+      {/* {chainIndex} */}
     </div>
   );
 };
