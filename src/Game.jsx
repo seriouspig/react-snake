@@ -2,16 +2,12 @@ import React, { useEffect, useState } from "react";
 import grid from "./grid";
 import "./Game.css";
 import Snake from "./Snake";
+import Food from "./Food";
 
 // MAIN GAMEPLAY
 
 const Game = () => {
-  const directions = ["N", "E", "S", "W", "none"];
-
-  const [directionIndex, setDirectionIndex] = useState(1);
-  const [snakeDirection, setSnakeDirection] = useState(
-    directions[directionIndex]
-  );
+  const [snakeDirection, setSnakeDirection] = useState("E");
   const [headPosition, setHeadPosition] = useState([5, 5]);
   const [previousHeadPosition, setPreviousHeadPosition] = useState([
     headPosition[0],
@@ -19,30 +15,37 @@ const Game = () => {
   ]);
   const [snakeLength, setSnakeLength] = useState(4);
 
-  const [bodyChain, setBodyChain] = useState([[1, 5], [(2, 5)], [3, 5], [4, 5]]);
-  const [previousBodyChain, setPreviousBodyChain] = useState([
-    [4, 5],
-    [3, 5],
+  const [bodyChain, setBodyChain] = useState([
+    [1, 5],
     [2, 5],
+    [3, 5],
+    [4, 5],
   ]);
+  
 
-  useEffect(() => {
-    setSnakeDirection(directions[directionIndex]);
-  }, [directionIndex]);
+  const increaseSnakeLength = () => {
+    console.log("INCREASING SNAKE LENGTH");
+
+    var currentLength = snakeLength;
+
+    setSnakeLength(currentLength + 1);
+  };
 
   useEffect(() => {
     var headY = headPosition[1];
     var headX = headPosition[0];
     setPreviousHeadPosition([headX, headY]);
-  }, []);
+  }, [headPosition]);
 
   // -------------------- HEAD MOVEMENT --------------------
 
   useEffect(() => {
     const interval = setInterval(() => {
+      // console.log("CALLING SET INTERVAL !!!!!!!!!!")
       var headY = headPosition[1];
       var headX = headPosition[0];
       setPreviousHeadPosition([headX, headY]);
+      console.log(snakeDirection);
       switch (snakeDirection) {
         case "N":
           setHeadPosition([headX, headY - 1]);
@@ -62,19 +65,23 @@ const Game = () => {
 
       var oldBodyChain = bodyChain;
 
-      if(oldBodyChain.length === snakeLength) {
-          oldBodyChain.shift()
+      if (oldBodyChain.length === snakeLength) {
+        oldBodyChain.shift();
       }
 
-      oldBodyChain.push(headPosition)
+      oldBodyChain.push(headPosition);
 
-      setBodyChain(oldBodyChain)
+      setBodyChain(oldBodyChain);
     }, 500);
 
     return () => {
       clearInterval(interval);
     };
-  }, [headPosition, snakeDirection]);
+  }, [headPosition]);
+
+  useEffect(() => {
+    console.log(snakeDirection);
+  }, [snakeDirection]);
 
   // -------------------- END OF HEAD MOVEMENT --------------------
 
@@ -82,18 +89,30 @@ const Game = () => {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
+      // console.log("KEY PRESSED")
       switch (event.keyCode) {
         case 38: // Up arrow key
-          setDirectionIndex(0);
+          console.log(snakeDirection);
+          if (snakeDirection !== "S") {
+            setSnakeDirection("N");
+          }
           break;
         case 40: // Down arrow key
-          setDirectionIndex(2);
+          if (snakeDirection !== "N") {
+            setSnakeDirection("S");
+          }
           break;
         case 37: // Left arrow key
-          setDirectionIndex(3);
+          console.log(snakeDirection);
+          if (snakeDirection !== "E") {
+            setSnakeDirection("W");
+          }
           break;
         case 39: // Right arrow key
-          setDirectionIndex(1);
+          console.log(snakeDirection);
+          if (snakeDirection !== "W") {
+            setSnakeDirection("E");
+          }
           break;
         default:
           break;
@@ -105,18 +124,16 @@ const Game = () => {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [headPosition]);
 
   // -------------------- END OF KEYBOARD CONTROLS --------------------
 
-  const checkCell = (cell) => {
-    if (cell === 1) {
-      return "wall";
-    }
-  };
-
   return (
     <div className="map-container">
+      <Food
+        headPosition={headPosition}
+        increaseSnakeLength={increaseSnakeLength}
+      />
       <Snake
         headPosition={headPosition}
         snakeDirection={snakeDirection}
