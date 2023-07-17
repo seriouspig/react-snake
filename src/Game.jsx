@@ -6,6 +6,8 @@ import Food from "./Food";
 
 // MAIN GAMEPLAY
 
+var snakeDir;
+
 const Game = () => {
   const [snakeDirection, setSnakeDirection] = useState("E");
   const [headPosition, setHeadPosition] = useState([5, 5]);
@@ -21,7 +23,6 @@ const Game = () => {
     [3, 5],
     [4, 5],
   ]);
-  
 
   const increaseSnakeLength = () => {
     console.log("INCREASING SNAKE LENGTH");
@@ -45,8 +46,8 @@ const Game = () => {
       var headY = headPosition[1];
       var headX = headPosition[0];
       setPreviousHeadPosition([headX, headY]);
-      console.log(snakeDirection);
-      switch (snakeDirection) {
+      console.log(snakeDir);
+      switch (snakeDir) {
         case "N":
           setHeadPosition([headX, headY - 1]);
           break;
@@ -80,7 +81,7 @@ const Game = () => {
   }, [headPosition]);
 
   useEffect(() => {
-    console.log(snakeDirection);
+    snakeDir = snakeDirection;
   }, [snakeDirection]);
 
   // -------------------- END OF HEAD MOVEMENT --------------------
@@ -90,9 +91,9 @@ const Game = () => {
   useEffect(() => {
     const handleKeyDown = (event) => {
       // console.log("KEY PRESSED")
+      console.log("SNAKE DIR: " + snakeDir);
       switch (event.keyCode) {
         case 38: // Up arrow key
-          console.log(snakeDirection);
           if (snakeDirection !== "S") {
             setSnakeDirection("N");
           }
@@ -103,13 +104,11 @@ const Game = () => {
           }
           break;
         case 37: // Left arrow key
-          console.log(snakeDirection);
           if (snakeDirection !== "E") {
             setSnakeDirection("W");
           }
           break;
         case 39: // Right arrow key
-          console.log(snakeDirection);
           if (snakeDirection !== "W") {
             setSnakeDirection("E");
           }
