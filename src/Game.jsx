@@ -58,9 +58,21 @@ const Game = () => {
   useEffect(() => {
     if (headPosition[1] < 0 || headPosition[0] < 0 || headPosition[1] > grid.length - 1 || headPosition[0] > grid[0].length - 1) {
       reset()
-      
+
     }
   }, [headPosition]);
+
+  function checkCollision(headPosition, bodyChain) {
+    return bodyChain.some((position) => {
+      return position[0] === headPosition[0] && position[1] === headPosition[1];
+    });
+  }
+
+  useEffect(() => {
+    if (checkCollision(headPosition, bodyChain)) {
+      reset();
+    };
+  }, [headPosition])
 
   // -------------------- END OF GAME OVER ----------------------
 
