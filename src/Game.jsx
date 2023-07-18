@@ -9,7 +9,7 @@ import Food from "./Food";
 var snakeDir;
 
 const Game = () => {
-  const [gameState, setGameState] = useState("end");
+  const [gameState, setGameState] = useState("start");
   const [snakeDirection, setSnakeDirection] = useState("E");
   const [headPosition, setHeadPosition] = useState([5, 5]);
   const [previousHeadPosition, setPreviousHeadPosition] = useState([
@@ -24,10 +24,14 @@ const Game = () => {
     [3, 5],
     [4, 5],
   ]);
+  const [speed, setSpeed] = useState(300);
+
+  const endGame = () => {
+        setGameState("end");
+        setSpeed(1000000000000);
+  }
 
   const reset = () => {
-    console.log("OUUUUUUCCCCHHHHH !!!");
-    setGameState("end");
     setHeadPosition([5, 5]);
     setSnakeLength(4);
     setSnakeDirection("E");
@@ -37,6 +41,8 @@ const Game = () => {
       [3, 5],
       [4, 5],
     ]);
+    setSpeed(300);
+    setGameState("play");
   };
 
   const increaseSnakeLength = () => {
@@ -56,9 +62,13 @@ const Game = () => {
   // -------------------- GAME OVER ----------------------
 
   useEffect(() => {
-    if (headPosition[1] < 0 || headPosition[0] < 0 || headPosition[1] > grid.length - 1 || headPosition[0] > grid[0].length - 1) {
-      reset()
-
+    if (
+      headPosition[1] < 0 ||
+      headPosition[0] < 0 ||
+      headPosition[1] > grid.length - 1 ||
+      headPosition[0] > grid[0].length - 1
+    ) {
+      endGame();
     }
   }, [headPosition]);
 
@@ -70,9 +80,9 @@ const Game = () => {
 
   useEffect(() => {
     if (checkCollision(headPosition, bodyChain)) {
-      reset();
-    };
-  }, [headPosition])
+      endGame()
+    }
+  }, [headPosition]);
 
   // -------------------- END OF GAME OVER ----------------------
 
@@ -114,7 +124,7 @@ const Game = () => {
 
         setBodyChain(oldBodyChain);
       }
-    }, 300);
+    }, speed);
 
     return () => {
       clearInterval(interval);
@@ -124,6 +134,12 @@ const Game = () => {
   useEffect(() => {
     snakeDir = snakeDirection;
   }, [snakeDirection]);
+
+  // useEffect(() => {
+  //   if (gameState === "play") {
+  //     reset()
+  //   }
+  // }, [gameState])
 
   // -------------------- END OF HEAD MOVEMENT --------------------
 
@@ -170,19 +186,37 @@ const Game = () => {
 
   return (
     <div className="map-container">
-      {gameState === "end" && (
+      {/* {gameState === "end" && (
         <div>
           GAME OVER
           <button onClick={() => setGameState("play")}>Try Again</button>
         </div>
-      )}
+      )} */}
       {gameState === "start" && (
-        <div>
-          <button onClick={() => setGameState("play")}>Start the game</button>
+        <div className="menu-container">
+          {grid.map((row, index) => {
+            return (
+              <div className="map-row" key={index}>
+                {row.map((cell, index) => {
+                  return <div className={`map-cell`} key={index}></div>;
+                })}
+              </div>
+            );
+          })}
+          <div className="game-menu">
+            <div className="menu-title">WELCOME TO REACT SNAKE</div>
+            <button onClick={() => setGameState("play")}>START</button>
+          </div>
         </div>
       )}
-      {gameState === "play" && (
+      {(gameState === "play" || gameState === "end") && (
         <>
+          {gameState === "end" && (
+            <div className="game-menu">
+              <div className="menu-title">GAME OVER</div>
+              <button onClick={() => reset()}>TRY AGAIN</button>
+            </div>
+          )}
           <Food
             headPosition={headPosition}
             increaseSnakeLength={increaseSnakeLength}
