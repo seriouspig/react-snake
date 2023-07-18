@@ -159,21 +159,25 @@ const Game = () => {
       console.log("SNAKE DIR: " + snakeDir);
       switch (event.keyCode) {
         case 38: // Up arrow key
+        case 87: // W key
           if (snakeDirection !== "S") {
             setSnakeDirection("N");
           }
           break;
         case 40: // Down arrow key
+        case 83: // S key
           if (snakeDirection !== "N") {
             setSnakeDirection("S");
           }
           break;
         case 37: // Left arrow key
+        case 65: // A key
           if (snakeDirection !== "E") {
             setSnakeDirection("W");
           }
           break;
         case 39: // Right arrow key
+        case 68: // D key
           if (snakeDirection !== "W") {
             setSnakeDirection("E");
           }
