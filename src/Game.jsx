@@ -25,6 +25,8 @@ const Game = () => {
     [4, 5],
   ]);
   const [speed, setSpeed] = useState(300);
+  const [score, setScore] = useState(0)
+  const [level, setLevel] = useState(1)
 
   const endGame = () => {
         setGameState("end");
@@ -41,6 +43,8 @@ const Game = () => {
       [3, 5],
       [4, 5],
     ]);
+    setScore(0);
+    setLevel(1);
     setSpeed(300);
     setGameState("play");
   };
@@ -51,6 +55,10 @@ const Game = () => {
     var currentLength = snakeLength;
 
     setSnakeLength(currentLength + 1);
+    var newScore = score;
+    newScore= newScore + 10;
+
+    setScore(newScore);
   };
 
   useEffect(() => {
@@ -206,17 +214,26 @@ const Game = () => {
           <div className="game-menu">
             <div className="menu-title">WELCOME TO REACT SNAKE</div>
             <button onClick={() => setGameState("play")}>START</button>
+            <p>Use Arrow Keys or WASD to control the snake</p>
           </div>
         </div>
       )}
       {(gameState === "play" || gameState === "end") && (
         <>
+          <div className="game-menu">
+            <div className="score-container">
+              <div className="menu-score">SCORE: {score}</div>
+              <div className="menu-level">LEVEL: {level}</div>
+            </div>
+          </div>
+
           {gameState === "end" && (
             <div className="game-menu">
               <div className="menu-title">GAME OVER</div>
               <button onClick={() => reset()}>TRY AGAIN</button>
             </div>
           )}
+
           <Food
             headPosition={headPosition}
             increaseSnakeLength={increaseSnakeLength}
