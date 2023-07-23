@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Food.css";
 
-const Food = ({ headPosition, increaseSnakeLength, grid, bodyChain }) => {
+const Food = ({ headPosition, increaseSnakeLength, grid, bodyChain, level }) => {
   const [foodPosition, setFoodPosition] = useState([0, 0]);
 
   useEffect(() => {
@@ -9,7 +9,7 @@ const Food = ({ headPosition, increaseSnakeLength, grid, bodyChain }) => {
     // const posX = Math.floor(Math.random() * grid[0].length);
     // setFoodPosition([posX, posY]);
     resetFoodPosition()
-  }, []);
+  }, [level]);
 
   const checkIfFoodOnBody = (posY, posX) => {
     bodyChain.some((position) => {

@@ -26,8 +26,36 @@ const Game = () => {
   ]);
   const [speed, setSpeed] = useState(300);
   const [score, setScore] = useState(0);
-  const [level, setLevel] = useState(1);
+  const [level, setLevel] = useState(0);
   const [grid, setGrid] = useState(gridArray[level]);
+
+  const passLevel = () => {
+    var nextLevel = level + 1;
+    if (
+      score === 100 ||
+      score === 200 ||
+      score === 300 ||
+      score === 400 ||
+      score === 500 ||
+      score === 600
+    ) {
+      setGrid(gridArray[nextLevel]);
+      setLevel(nextLevel);
+      setHeadPosition([5, 5]);
+      setSnakeLength(4);
+      setSnakeDirection("E");
+      setBodyChain([
+        [1, 5],
+        [2, 5],
+        [3, 5],
+        [4, 5],
+      ]);
+    }
+  };
+
+  useEffect(() => {
+    passLevel();
+  }, [score]);
 
   const endGame = () => {
     setGameState("end");
@@ -35,6 +63,8 @@ const Game = () => {
   };
 
   const reset = () => {
+    setLevel(0);
+    setGrid(gridArray[0]);
     setHeadPosition([5, 5]);
     setSnakeLength(4);
     setSnakeDirection("E");
@@ -45,7 +75,6 @@ const Game = () => {
       [4, 5],
     ]);
     setScore(0);
-    setLevel(1);
     setSpeed(300);
     setGameState("play");
   };
@@ -98,7 +127,10 @@ const Game = () => {
 
   useEffect(() => {
     // checkInternalWallCollision()
-    if (checkCollision(headPosition, bodyChain) || checkInternalWallCollision()) {
+    if (
+      checkCollision(headPosition, bodyChain) ||
+      checkInternalWallCollision()
+    ) {
       endGame();
     }
   }, [headPosition]);
@@ -237,6 +269,7 @@ const Game = () => {
             increaseSnakeLength={increaseSnakeLength}
             grid={grid}
             bodyChain={bodyChain}
+            level={level}
           />
           <Snake
             headPosition={headPosition}
