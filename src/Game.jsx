@@ -189,6 +189,7 @@ const Game = () => {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
+       
       switch (event.keyCode) {
         case 38: // Up arrow key
         case 87: // W key
@@ -217,6 +218,7 @@ const Game = () => {
         default:
           break;
       }
+      e.preventDefault();
     };
 
     window.addEventListener("keydown", handleKeyDown);
