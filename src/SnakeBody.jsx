@@ -3,8 +3,6 @@ import "./SnakeBody.css";
 
 const SnakeBody = ({
   headPosition,
-  snakeDirection,
-  previousHeadPosition,
   bodyChain,
   chainIndex,
 }) => {
@@ -31,7 +29,6 @@ const SnakeBody = ({
         left: `${Xpos * 28}px`,
       }}
     >
-      {/* {chainIndex} */}
     </div>
   );
 };

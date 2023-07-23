@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import grid from "./grid";
+import gridArray from "./grid";
 import "./Game.css";
 import Snake from "./Snake";
 import Food from "./Food";
@@ -25,13 +25,14 @@ const Game = () => {
     [4, 5],
   ]);
   const [speed, setSpeed] = useState(300);
-  const [score, setScore] = useState(0)
-  const [level, setLevel] = useState(1)
+  const [score, setScore] = useState(0);
+  const [level, setLevel] = useState(1);
+  const [grid, setGrid] = useState(gridArray[level]);
 
   const endGame = () => {
-        setGameState("end");
-        setSpeed(1000000000000);
-  }
+    setGameState("end");
+    setSpeed(1000000000000);
+  };
 
   const reset = () => {
     setHeadPosition([5, 5]);
@@ -50,14 +51,10 @@ const Game = () => {
   };
 
   const increaseSnakeLength = () => {
-    console.log("INCREASING SNAKE LENGTH");
-
     var currentLength = snakeLength;
-
     setSnakeLength(currentLength + 1);
     var newScore = score;
-    newScore= newScore + 10;
-
+    newScore = newScore + 10;
     setScore(newScore);
   };
 
@@ -86,9 +83,14 @@ const Game = () => {
     });
   }
 
+  function checkInternalWallCollision() {
+    return (grid[headPosition[1]][headPosition[0]] === 1 )     
+  }
+
   useEffect(() => {
-    if (checkCollision(headPosition, bodyChain)) {
-      endGame()
+    checkInternalWallCollision()
+    if (checkCollision(headPosition, bodyChain) || checkInternalWallCollision()) {
+      endGame();
     }
   }, [headPosition]);
 
@@ -143,12 +145,6 @@ const Game = () => {
     snakeDir = snakeDirection;
   }, [snakeDirection]);
 
-  // useEffect(() => {
-  //   if (gameState === "play") {
-  //     reset()
-  //   }
-  // }, [gameState])
-
   // -------------------- END OF HEAD MOVEMENT --------------------
 
   // -------------------- KEYBOARD CONTROLS --------------------
@@ -198,12 +194,6 @@ const Game = () => {
 
   return (
     <div className="map-container">
-      {/* {gameState === "end" && (
-        <div>
-          GAME OVER
-          <button onClick={() => setGameState("play")}>Try Again</button>
-        </div>
-      )} */}
       {gameState === "start" && (
         <div className="menu-container">
           {grid.map((row, index) => {
@@ -241,6 +231,7 @@ const Game = () => {
           <Food
             headPosition={headPosition}
             increaseSnakeLength={increaseSnakeLength}
+            grid={grid}
           />
           <Snake
             headPosition={headPosition}
@@ -253,7 +244,11 @@ const Game = () => {
             return (
               <div className="map-row" key={index}>
                 {row.map((cell, index) => {
-                  return <div className={`map-cell`} key={index}></div>;
+                  if (cell === 0) {
+                    return <div className={`map-cell`} key={index}></div>;
+                  } else {
+                    return <div className={`map-cell wall`} key={index}></div>;
+                  }
                 })}
               </div>
             );
