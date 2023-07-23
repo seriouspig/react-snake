@@ -5,9 +5,6 @@ const Food = ({ headPosition, increaseSnakeLength, grid, bodyChain, level }) => 
   const [foodPosition, setFoodPosition] = useState([0, 0]);
 
   useEffect(() => {
-    // const posY = Math.floor(Math.random() * grid.length);
-    // const posX = Math.floor(Math.random() * grid[0].length);
-    // setFoodPosition([posX, posY]);
     resetFoodPosition()
   }, [level]);
 
@@ -16,10 +13,6 @@ const Food = ({ headPosition, increaseSnakeLength, grid, bodyChain, level }) => 
       return position[0] === posX && position[1] === posY;
     });
   }
-
-  useEffect(() => {
-    console.log(bodyChain[1])
-  }, [headPosition])
 
   const resetFoodPosition = () => {
     var posY;

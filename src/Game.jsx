@@ -226,73 +226,119 @@ const Game = () => {
     };
   }, [headPosition]);
 
+  const touchScreenControls = (dir) => {
+    if (
+      (dir === "N" && snakeDirection !== "S") ||
+      (dir === "S" && snakeDirection !== "N") ||
+      (dir === "E" && snakeDirection !== "W") ||
+      (dir === "W" && snakeDirection !== "E")
+    )
+      setSnakeDirection(dir);
+  }
+
   // -------------------- END OF KEYBOARD CONTROLS --------------------
 
   return (
-    <div className="map-container">
-      {gameState === "start" && (
-        <div className="menu-container">
-          {grid.map((row, index) => {
-            return (
-              <div className="map-row" key={index}>
-                {row.map((cell, index) => {
-                  return <div className={`map-cell`} key={index}></div>;
-                })}
-              </div>
-            );
-          })}
-          <div className="game-menu">
-            <div className="menu-title">WELCOME TO REACT SNAKE</div>
-            <button onClick={() => setGameState("play")}>START</button>
-            <p>Use Arrow Keys or WASD to control the snake</p>
-          </div>
-        </div>
-      )}
-      {(gameState === "play" || gameState === "end") && (
-        <>
-          <div className="game-menu">
-            <div className="score-container">
-              <div className="menu-score">SCORE: {score}</div>
-              <div className="menu-level">LEVEL: {level}</div>
-            </div>
-          </div>
-
-          {gameState === "end" && (
-            <div className="game-menu">
-              <div className="menu-title">GAME OVER</div>
-              <button onClick={() => reset()}>TRY AGAIN</button>
-            </div>
-          )}
-
-          <Food
-            headPosition={headPosition}
-            increaseSnakeLength={increaseSnakeLength}
-            grid={grid}
-            bodyChain={bodyChain}
-            level={level}
-          />
-          <Snake
-            headPosition={headPosition}
-            snakeDirection={snakeDirection}
-            snakeLength={snakeLength}
-            previousHeadPosition={previousHeadPosition}
-            bodyChain={bodyChain}
-          />
-          {grid.map((row, index) => {
-            return (
-              <div className="map-row" key={index}>
-                {row.map((cell, index) => {
-                  if (cell === 0) {
+    <div>
+      <div className="map-container">
+        {gameState === "start" && (
+          <div className="menu-container">
+            {grid.map((row, index) => {
+              return (
+                <div className="map-row" key={index}>
+                  {row.map((cell, index) => {
                     return <div className={`map-cell`} key={index}></div>;
-                  } else {
-                    return <div className={`map-cell wall`} key={index}></div>;
-                  }
-                })}
+                  })}
+                </div>
+              );
+            })}
+            <div className="game-menu">
+              <div className="menu-title">WELCOME TO REACT SNAKE</div>
+              <button onClick={() => setGameState("play")}>START</button>
+              <p>Use Arrow Keys or WASD to control the snake</p>
+            </div>
+          </div>
+        )}
+        {(gameState === "play" || gameState === "end") && (
+          <>
+            <div className="game-menu">
+              <div className="score-container">
+                <div className="menu-score">SCORE: {score}</div>
+                <div className="menu-level">LEVEL: {level}</div>
               </div>
-            );
-          })}
-        </>
-      )}
+            </div>
+
+            {gameState === "end" && (
+              <div className="game-menu">
+                <div className="menu-title">GAME OVER</div>
+                <button onClick={() => reset()}>TRY AGAIN</button>
+              </div>
+            )}
+
+            <Food
+              headPosition={headPosition}
+              increaseSnakeLength={increaseSnakeLength}
+              grid={grid}
+              bodyChain={bodyChain}
+              level={level}
+            />
+            <Snake
+              headPosition={headPosition}
+              snakeDirection={snakeDirection}
+              snakeLength={snakeLength}
+              previousHeadPosition={previousHeadPosition}
+              bodyChain={bodyChain}
+            />
+            {grid.map((row, index) => {
+              return (
+                <div className="map-row" key={index}>
+                  {row.map((cell, index) => {
+                    if (cell === 0) {
+                      return <div className={`map-cell`} key={index}></div>;
+                    } else {
+                      return (
+                        <div className={`map-cell wall`} key={index}></div>
+                      );
+                    }
+                  })}
+                </div>
+              );
+            })}
+          </>
+        )}
+      </div>
+      <div className="controls">
+        {" "}
+        <div class="grid-item"></div>
+        <div
+          class="grid-item control-button"
+          onClick={() => touchScreenControls("N")}
+        >
+          <div className="triangle"></div>
+        </div>
+        <div class="grid-item"></div>
+        <div
+          class="grid-item control-button"
+          onClick={() => touchScreenControls("W")}
+        >
+          <div className="triangle left"></div>
+        </div>
+        <div class="grid-item"></div>
+        <div
+          class="grid-item control-button"
+          onClick={() => touchScreenControls("E")}
+        >
+          <div className="triangle right"></div>
+        </div>
+        <div class="grid-item"></div>
+        <div
+          class="grid-item control-button"
+          onClick={() => touchScreenControls("S")}
+        >
+          <div className="triangle bottom"></div>
+        </div>
+        <div class="grid-item"></div>
+      </div>
     </div>
   );
 };
