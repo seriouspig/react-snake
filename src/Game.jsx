@@ -84,11 +84,20 @@ const Game = () => {
   }
 
   function checkInternalWallCollision() {
-    return (grid[headPosition[1]][headPosition[0]] === 1 )     
+    if (
+      headPosition[1] >= 0 &&
+      headPosition[0] >= 0 &&
+      headPosition[1] <= grid.length - 1 &&
+      headPosition[0] <= grid[0].length - 1
+    ) {
+      return grid[headPosition[1]][headPosition[0]] !== 0;
+    } else {
+      return false;
+    }
   }
 
   useEffect(() => {
-    checkInternalWallCollision()
+    // checkInternalWallCollision()
     if (checkCollision(headPosition, bodyChain) || checkInternalWallCollision()) {
       endGame();
     }
@@ -101,12 +110,9 @@ const Game = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       if (gameState === "play") {
-        // console.log("CALLING SET INTERVAL !!!!!!!!!!")
         var headY = headPosition[1];
         var headX = headPosition[0];
         setPreviousHeadPosition([headX, headY]);
-        console.log(snakeDir);
-
         switch (snakeDir) {
           case "N":
             setHeadPosition([headX, headY - 1]);
@@ -151,8 +157,6 @@ const Game = () => {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      // console.log("KEY PRESSED")
-      console.log("SNAKE DIR: " + snakeDir);
       switch (event.keyCode) {
         case 38: // Up arrow key
         case 87: // W key
@@ -232,6 +236,7 @@ const Game = () => {
             headPosition={headPosition}
             increaseSnakeLength={increaseSnakeLength}
             grid={grid}
+            bodyChain={bodyChain}
           />
           <Snake
             headPosition={headPosition}
